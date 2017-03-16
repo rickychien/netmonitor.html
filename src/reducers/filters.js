@@ -1,0 +1,81 @@
+const I = require("immutable");
+const {
+  ENABLE_REQUEST_FILTER_TYPE_ONLY,
+  TOGGLE_REQUEST_FILTER_TYPE,
+  SET_REQUEST_FILTER_TEXT,
+} = require("../constants");
+
+const FilterTypes = I.Record({
+  all: false,
+  html: false,
+  css: false,
+  js: false,
+  xhr: false,
+  fonts: false,
+  images: false,
+  media: false,
+  flash: false,
+  ws: false,
+  other: false,
+});
+
+const Filters = I.Record({
+  requestFilterTypes: new FilterTypes({ all: true }),
+  requestFilterText: "",
+});
+
+function toggleRequestFilterType(state, action) {
+  let { filter } = action;
+  let newState;
+
+  // Ignore unknown filter type
+  if (!state.has(filter)) {
+    return state;
+  }
+  if (filter === "all") {
+    return new FilterTypes({ all: true });
+  }
+
+  newState = state.withMutations(types => {
+    types.set("all", false);
+    types.set(filter, !state.get(filter));
+  });
+
+  if (!newState.includes(true)) {
+    newState = new FilterTypes({ all: true });
+  }
+
+  return newState;
+}
+
+function enableRequestFilterTypeOnly(state, action) {
+  let { filter } = action;
+
+  // Ignore unknown filter type
+  if (!state.has(filter)) {
+    return state;
+  }
+
+  return new FilterTypes({ [filter]: true });
+}
+
+function filters(state = new Filters(), action) {
+  switch (action.type) {
+    case ENABLE_REQUEST_FILTER_TYPE_ONLY:
+      return state.set("requestFilterTypes",
+        enableRequestFilterTypeOnly(state.requestFilterTypes, action));
+    case TOGGLE_REQUEST_FILTER_TYPE:
+      return state.set("requestFilterTypes",
+        toggleRequestFilterType(state.requestFilterTypes, action));
+    case SET_REQUEST_FILTER_TEXT:
+      return state.set("requestFilterText", action.text);
+    default:
+      return state;
+  }
+}
+
+module.exports = {
+  FilterTypes,
+  Filters,
+  filters
+};

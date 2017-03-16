@@ -1,0 +1,31 @@
+{
+  "name": "netmonitor.html",
+  "version": "0.0.1",
+  "license": "MPL-2.0",
+  "description": "Network monitor panel in developer tools",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=6.9.0"
+  },
+  "dependencies": {
+    "codemirror": "^5.1.0",
+    "devtools-launchpad": "^0.0.56",
+    "devtools-reps": "^0.4.0",
+    "devtools-sham-modules": "^0.0.16",
+    "immutable": "^3.8.1",
+    "jszip": "^3.1.3",
+    "react": "=15.3.2",
+    "react-dom": "=15.3.2",
+    "react-redux": "=5.0.3",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^2.5.4"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.6.0",
+    "babel-register": "^6.7.2"
+  },
+  "scripts": {
+    "start": "node bin/dev-server"
+  }
+}
