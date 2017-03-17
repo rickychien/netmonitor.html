@@ -18,7 +18,7 @@ function buildConfig(envConfig) {
       loaders: [
         {
           test: /\.properties$/,
-          loader: require.resolve('./loaders/prefs-loader'),
+          loader: require.resolve('./loaders/l10n-properties-loader'),
         }
       ]
     }

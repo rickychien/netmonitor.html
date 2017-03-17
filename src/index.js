@@ -1,42 +1,45 @@
 const React = require("react");
 const ReactDOM = require("react-dom");
-const { firefox, getClient } = require("devtools-client-adapters");
-const {
-  bootstrap,
-  renderRoot,
-  unmountRoot,
-} = require("devtools-launchpad");
-const { getValue, isFirefoxPanel } = require("devtools-config");
+const { bindActionCreators } = require("redux");
+const { bootstrap } = require("devtools-launchpad");
+const { EventEmitter } = require("devtools-sham-modules");
 const { L10N } = require("./utils/l10n");
-const configureStore = require("./utils/store");
-const { onConnect, onFirefoxConnect } = require("./utils/client");
-const NetworkMonitor = require("./components/network-monitor").default;
+const { configureStore } = require("./utils/store");
 
-L10N.setBundle("./locales/netmonitor.properties");
-L10N.setBundle("./locales/webconsole.properties");
-L10N.setBundle("./locales/har.properties");
+L10N.setBundle(require("./locales/har.properties"));
+L10N.setBundle(require("./locales/netmonitor.properties"));
+L10N.setBundle(require("./locales/webconsole.properties"));
 
-// require("./netmonitor.css");
+const Controller = require("./controller");
+const NetworkMonitor = require("./components/network-monitor");
+
+require("./shared/components/splitter/SplitBox.css");
+require("./shared/components/tabs/tabbar.css");
+require("./shared/components/tabs/tabs.css");
+// require("./shared/components/tree/tree-view.css");
+require("./netmonitor.css");
+
+EventEmitter.decorate(window);
 
 const store = configureStore();
 const actions = bindActionCreators(require("./actions"), store.dispatch);
 
-if (isFirefoxPanel()) {
-  module.exports = {
-    bootstrap: ({ threadClient, tabTarget }) => {
-      firefox.setThreadClient(threadClient);
-      firefox.setTabTarget(tabTarget);
-      renderRoot(React, ReactDOM, App, store);
-      firefox.initPage(actions);
-      return onFirefoxConnect(actions, firefox);
-    },
-    destroy: () => unmountRoot(ReactDOM),
-    store,
-    actions,
-    selectors,
-    client: firefox.clientCommands,
-  };
-} else {
-  bootstrap(React, ReactDOM, NetworkMonitor, actions, store)
-    .then((connection) => onConnect(connection, actions));
+async function run() {
+  let connection = await bootstrap(React, ReactDOM, NetworkMonitor, null, store);
+
+  if (!connection || !connection.tab) {
+    return;
+  }
+
+  switch(connection.tab.clientType) {
+    case "chrome":
+      // TODO: support chrome
+    case "firefox":
+      window.controller = new Controller(connection.client.getTabTarget(), actions, store);
+      break;
+    default:
+      throw Error(`Unknown connection client - "${connection.tab.clientType}"`);
+  }
 }
+
+run();

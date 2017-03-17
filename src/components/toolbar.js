@@ -7,7 +7,7 @@ const {
 const { connect } = require("react-redux");
 // FIXME:
 // const { PluralForm } = require("devtools/shared/plural-form");
-const PluralForm = { get:() => {} };
+const PluralForm = { get: () => "" };
 const Actions = require("../actions/index");
 const { L10N } = require("../utils/l10n");
 const {

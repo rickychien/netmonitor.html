@@ -34,11 +34,12 @@ module.exports = createClass({
     this.shortcuts = new KeyShortcuts({
       window
     });
-    */
+
     this.shortcuts.on(this.props.keyShortcut, (name, event) => {
       event.preventDefault();
       this.refs.input.focus();
     });
+    */
   },
 
   componentWillUnmount() {

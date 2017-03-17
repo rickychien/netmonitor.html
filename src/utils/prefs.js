@@ -1,13 +1,18 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 const { PrefsHelper } = require("devtools-sham-modules");
+const { Services: { pref }} = require("devtools-modules");
+const { isDevelopment } = require("devtools-config");
+
+if (isDevelopment()) {
+  pref("devtools.webconsole.persistlog", false);
+  pref("devtools.netmonitor.panes-network-details-width", 450);
+  pref("devtools.netmonitor.panes-network-details-height", 50);
+  pref("devtools.netmonitor.filters", JSON.stringify(["all"]));
+}
 
 module.exports = {
-  Prefs: new PrefsHelper("devtools.netmonitor", {
-    networkDetailsWidth: ["Int", "panes-network-details-width"],
-    networkDetailsHeight: ["Int", "panes-network-details-height"],
-    filters: ["Json", "filters"],
+  Prefs: new PrefsHelper("devtools", {
+    networkDetailsWidth: ["Int", "netmonitor.panes-network-details-width"],
+    networkDetailsHeight: ["Int", "netmonitor.panes-network-details-height"],
+    filters: ["Json", "netmonitor.filters"],
   }),
 };

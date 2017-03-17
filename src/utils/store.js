@@ -30,7 +30,9 @@ function configureStore() {
     ui: new UI(),
   };
 
-  return createStore(rootReducer, initialState, applyMiddleware(middleware));
+  return createStore(rootReducer, initialState, applyMiddleware(...middleware));
 }
 
-exports.configureStore = configureStore;
+module.exports = {
+  configureStore,
+}
