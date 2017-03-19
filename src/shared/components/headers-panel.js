@@ -5,6 +5,7 @@ const {
   PropTypes,
 } = require("react");
 const { REPS, MODE } = require("devtools-reps");
+const { supportsCustomRequest } = require("../../connector");
 const { getFormattedSize } = require("../../utils/format-utils");
 const { L10N } = require("../../utils/l10n");
 const {
@@ -191,7 +192,7 @@ const HeadersPanel = createClass({
           statusCodeDocURL ? MDNLink({
             url: statusCodeDocURL,
           }) : null,
-          window.controller.supportsCustomRequest && button({
+          supportsCustomRequest && button({
             className: "devtools-button",
             onClick: cloneSelectedRequest,
           }, EDIT_AND_RESEND),

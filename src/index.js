@@ -10,7 +10,6 @@ L10N.setBundle(require("./locales/har.properties"));
 L10N.setBundle(require("./locales/netmonitor.properties"));
 L10N.setBundle(require("./locales/webconsole.properties"));
 
-const Controller = require("./controller");
 const NetworkMonitor = require("./components/network-monitor");
 
 require("./shared/components/splitter/SplitBox.css");
@@ -31,17 +30,7 @@ async function run() {
     return;
   }
 
-  let { clientType } = connection.tab;
-
-  switch(clientType) {
-    case "chrome":
-      // TODO: support chrome
-    case "firefox":
-      window.controller = new Controller(connection.client.getTabTarget(), actions, store);
-      break;
-    default:
-      throw Error(`Unknown connection client - "${clientType}"`);
-  }
+  require("./connector").connect(connection, actions, store);
 }
 
 run();

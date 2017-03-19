@@ -5,19 +5,14 @@ function TimelineFront() {
   return this;
 };
 const { Services } = require("devtools-modules");
-const Actions = require("./actions");
-const { ACTIVITY_TYPE, EVENTS } = require("./constants");
-const { getRequestById, getDisplayedRequestById } = require("./selectors");
-const { CurlUtils } = require("./shared/curl");
-const { fetchHeaders, formDataURI } = require("./utils/request-utils");
+const Actions = require("../actions");
+const { ACTIVITY_TYPE, EVENTS } = require("../constants");
+const { getRequestById, getDisplayedRequestById } = require("../selectors");
+const { CurlUtils } = require("../shared/curl");
+const { fetchHeaders, formDataURI } = require("../utils/request-utils");
 
-module.exports = class Controller {
-  constructor(tabTarget, actions, store) {
-    this.actions = actions;
-    this.store = store;
-    this.tabTarget = tabTarget;
-    this.tabClient = tabTarget.isTabActor ? tabTarget.activeTab : null;
-
+class FirefoxConnector {
+  constructor() {
     this.willNavigate = this.willNavigate.bind(this);
     this.close = this.close.bind(this);
     this.displayCachedEvents = this.displayCachedEvents.bind(this);
@@ -37,11 +32,18 @@ module.exports = class Controller {
     this.getString = this.getString.bind(this);
     this.triggerActivity = this.triggerActivity.bind(this);
     this.inspectRequest = this.inspectRequest.bind(this);
+  }
 
-    tabTarget.on("will-navigate", this.willNavigate);
-    tabTarget.on("close", this.close);
+  connect(connection, actions, store) {
+    this.actions = actions;
+    this.store = store;
+    this.tabTarget = connection.client.getTabTarget();
+    this.tabClient = this.tabTarget.isTabActor ? this.tabTarget.activeTab : null;
 
-    this.webConsoleClient = tabTarget.activeConsole;
+    this.tabTarget.on("will-navigate", this.willNavigate);
+    this.tabTarget.on("close", this.close);
+
+    this.webConsoleClient = this.tabTarget.activeConsole;
     this.webConsoleClient.on("networkEvent", this.onNetworkEvent);
     this.webConsoleClient.on("networkEventUpdate", this.onNetworkEventUpdate);
 
@@ -653,3 +655,5 @@ module.exports = class Controller {
     return this.toolbox.viewSourceInDebugger(sourceURL, sourceLine);
   }
 };
+
+module.exports = new FirefoxConnector();

@@ -1,4 +1,5 @@
 const { Services } = require("devtools-modules");
+const { getString } = require("./connector");
 const { showMenu } = require("./shared/components/menu");
 const { HarExporter } = require("./har/har-exporter");
 const { Curl } = require("./shared/curl");
@@ -213,7 +214,7 @@ RequestListContextMenu.prototype = {
       selected.requestHeaders,
       selected.requestHeadersFromUploadStream,
       selected.requestPostData,
-      window.controller.getString
+      getString
     );
 
     let params = [];
@@ -231,7 +232,7 @@ RequestListContextMenu.prototype = {
     // Fall back to raw payload.
     if (!string) {
       let postData = selected.requestPostData.postData.text;
-      string = await window.gNetwork.getString(postData);
+      string = await getString(postData);
       if (Services.appinfo.OS !== "WINNT") {
         string = string.replace(/\r/g, "");
       }
@@ -257,14 +258,14 @@ RequestListContextMenu.prototype = {
 
     // Fetch header values.
     for (let { name, value } of selected.requestHeaders.headers) {
-      let text = await window.gNetwork.getString(value);
+      let text = await getString(value);
       data.headers.push({ name: name, value: text });
     }
 
     // Fetch the request payload.
     if (selected.requestPostData) {
       let postData = selected.requestPostData.postData.text;
-      data.postDataText = await window.gNetwork.getString(postData);
+      data.postDataText = await getString(postData);
     }
 
     clipboardHelper.copyString(Curl.generateCommand(data));
@@ -298,7 +299,7 @@ RequestListContextMenu.prototype = {
   copyImageAsDataUri() {
     const { mimeType, text, encoding } = this.selectedRequest.responseContent.content;
 
-    window.gNetwork.getString(text).then(string => {
+    getString(text).then(string => {
       let data = formDataURI(mimeType, encoding, string);
       clipboardHelper.copyString(data);
     });
@@ -310,7 +311,7 @@ RequestListContextMenu.prototype = {
   copyResponse() {
     const { text } = this.selectedRequest.responseContent.content;
 
-    window.gNetwork.getString(text).then(string => {
+    getString(text).then(string => {
       clipboardHelper.copyString(string);
     });
   },
@@ -334,7 +335,7 @@ RequestListContextMenu.prototype = {
     let title = form.title || form.url;
 
     return {
-      getString: window.gNetwork.getString.bind(window.gNetwork),
+      getString,
       items: this.sortedRequests,
       title: title
     };

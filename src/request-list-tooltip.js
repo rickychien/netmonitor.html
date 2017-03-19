@@ -1,3 +1,4 @@
+const { getString } = require("./connector");
 const { WEBCONSOLE_L10N } = require("./utils/l10n");
 const { formDataURI } = require("./utils/request-utils");
 
@@ -108,7 +109,7 @@ async function setTooltipImageContent(tooltip, itemEl, requestItem) {
     return false;
   }
 
-  let string = await window.controller.getString(text);
+  let string = await getString(text);
   let src = formDataURI(mimeType, encoding, string);
   let maxDim = REQUESTS_TOOLTIP_IMAGE_MAX_DIM;
   let { naturalWidth, naturalHeight } = await getImageDimensions(tooltip.doc, src);

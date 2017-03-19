@@ -7,6 +7,7 @@ const {
 const { connect } = require("react-redux");
 const { findDOMNode } = require("react-dom");
 const Actions = require("../actions/index");
+const { getString } = require("../connector");
 const { Prefs } = require("../utils/prefs");
 const { getFormDataSections } = require("../utils/request-utils");
 const { getSelectedRequest } = require("../selectors/index");
@@ -63,7 +64,7 @@ const MonitorPanel = createClass({
         requestHeaders,
         requestHeadersFromUploadStream,
         requestPostData,
-        window.controller.getString,
+        getString,
       ).then((newFormDataSections) => {
         updateRequest(
           request.id,

@@ -5,6 +5,7 @@ const {
 } = require("react");
 const { connect } = require("react-redux");
 const Actions = require("../actions/index");
+const { triggerActivity } = require("../connector");
 const { ACTIVITY_TYPE } = require("../constants");
 const { L10N } = require("../utils/l10n");
 
@@ -57,7 +58,6 @@ module.exports = connect(
   undefined,
   dispatch => ({
     onPerfClick: () => dispatch(Actions.openStatistics(true)),
-    onReloadClick: () =>
-      window.controller.triggerActivity(ACTIVITY_TYPE.RELOAD.WITH_CACHE_DEFAULT),
+    onReloadClick: () => triggerActivity(ACTIVITY_TYPE.RELOAD.WITH_CACHE_DEFAULT),
   })
 )(RequestListEmptyNotice);

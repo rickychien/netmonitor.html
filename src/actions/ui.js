@@ -30,9 +30,6 @@ function openNetworkDetails(open) {
  * @param {boolean} visible - expected performance statistics panel open state
  */
 function openStatistics(open) {
-  if (open) {
-    window.controller.triggerActivity(ACTIVITY_TYPE.RELOAD.WITH_CACHE_ENABLED);
-  }
   return {
     type: OPEN_STATISTICS,
     open,
