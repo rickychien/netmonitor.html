@@ -8,7 +8,7 @@
     "node": ">=6.9.0"
   },
   "dependencies": {
-    "codemirror": "^5.1.0",
+    "codemirror": "^5.24.2",
     "devtools-launchpad": "^0.0.56",
     "devtools-reps": "^0.4.0",
     "devtools-sham-modules": "^0.0.16",

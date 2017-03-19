@@ -13,7 +13,7 @@ const { FILTER_SEARCH_DELAY } = require("../../constants");
 
 // Components
 const Rep = createFactory(REPS.Rep);
-const Editor = createFactory(require("./editor"));
+const Editor = createFactory(require("./editor/editor"));
 const SearchBox = createFactory(require("./search-box/SearchBox"));
 const TreeView = createFactory(require("./tree/tree-view"));
 const TreeRow = createFactory(require("./tree/tree-row"));
@@ -78,7 +78,6 @@ const PropertiesView = createClass({
 
   renderRowWithEditor(props) {
     const { level, name, value, path } = props.member;
-
     // Display source editor when specifying to EDITOR_CONFIG_ID along with config
     if (level === 1 && name === EDITOR_CONFIG_ID) {
       return (

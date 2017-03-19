@@ -1,16 +1,21 @@
-/* eslint react/prop-types */
-
+const CodeMirror = require("codemirror");
 const {
   createClass,
   DOM,
   PropTypes,
 } = require("react");
-// FIXME:
-// const SourceEditor = require("devtools/client/sourceeditor/editor");
-function SourceEditor () {
-  this.appendTo = this.setMode = this.setText = this.destroy = () => {};
-};
+
+require("codemirror/lib/codemirror.css");
+require("codemirror/mode/javascript/javascript");
+require("codemirror/mode/htmlmixed/htmlmixed");
+require("codemirror/mode/coffeescript/coffeescript");
+require("codemirror/mode/jsx/jsx");
+require("codemirror/mode/elm/elm");
+require("codemirror/mode/clojure/clojure");
+require("./codemirror-mozilla.css");
+
 const { div } = DOM;
+
 const SYNTAX_HIGHLIGHT_MAX_SIZE = 102400;
 
 /**
@@ -39,14 +44,12 @@ const Editor = createClass({
   componentDidMount() {
     const { mode, text } = this.props;
 
-    this.editor = new SourceEditor({
+    this.editor = new CodeMirror(this.refs.editorElement, {
       lineNumbers: true,
       mode: text.length < SYNTAX_HIGHLIGHT_MAX_SIZE ? mode : null,
       readOnly: true,
       value: text,
     });
-
-    this.deferEditor = this.editor.appendTo(this.refs.editorElement);
   },
 
   componentDidUpdate(prevProps) {
@@ -57,29 +60,24 @@ const Editor = createClass({
     }
 
     if (prevProps.mode !== mode && text.length < SYNTAX_HIGHLIGHT_MAX_SIZE) {
-      this.deferEditor.then(() => {
-        this.editor.setMode(mode);
-      });
+      this.editor.setMode(mode);
     }
 
     if (prevProps.text !== text) {
-      this.deferEditor.then(() => {
-        // FIXME: Workaround for browser_net_accessibility test to
-        // make sure editor node exists while setting editor text.
-        // deferEditor workaround should be removed in bug 1308442
-        if (this.refs.editorElement) {
-          this.editor.setText(text);
-        }
-      });
+      // FIXME: Workaround for browser_net_accessibility test to
+      // make sure editor node exists while setting editor text.
+      // deferEditor workaround should be removed in bug 1308442
+      if (this.refs.editorElement) {
+        this.editor.setText(text);
+      }
     }
   },
 
   componentWillUnmount() {
-    this.deferEditor.then(() => {
-      this.editor.destroy();
-      this.editor = null;
-    });
-    this.deferEditor = null;
+    // Unlink the current document.
+    if (this.editor.doc) {
+      this.editor.doc.cm = null;
+    }
   },
 
   render() {
