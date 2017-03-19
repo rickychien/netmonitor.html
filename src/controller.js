@@ -1,5 +1,9 @@
 // FIXME:
 // const { TimelineFront } = require("devtools/shared/fronts/timeline");
+function TimelineFront() {
+  this.on = this.start = this.off = this.destroy = () => {};
+  return this;
+};
 const { Services } = require("devtools-modules");
 const Actions = require("./actions");
 const { ACTIVITY_TYPE, EVENTS } = require("./constants");
