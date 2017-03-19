@@ -4,13 +4,9 @@ const {
   PropTypes,
 } = require("react");
 const { connect } = require("react-redux");
-// FIXME:
-// const { Chart } = require("devtools/client/shared/widgets/Chart");
-const Chart = { on: () => {}, PieTable: () => {} };
-// FIXME:
-// const { PluralForm } = require("devtools/shared/plural-form");
-const PluralForm = { get:() => {} };
 const Actions = require("../actions/index");
+const { Chart } = require("../shared/chart");
+const { PluralForm } = require("../shared/plural-form");
 const { Filters } = require("../utils/filter-predicates");
 const { L10N } = require("../utils/l10n");
 const {

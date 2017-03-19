@@ -19,7 +19,7 @@ function buildConfig(envConfig) {
         {
           test: /\.properties$/,
           loader: require.resolve('./loaders/l10n-properties-loader'),
-        }
+        },
       ]
     }
   };

@@ -1,17 +1,19 @@
-let { L10N } = require("devtools-launchpad");
+const { sprintf } = require("devtools-modules");
 
-/**
-   * Converts a number to a locale-aware string format and keeps a certain
-   * number of decimals.
-   *
-   * @param number number
-   *        The number to convert.
-   * @param number decimals [optional]
-   *        Total decimals to keep.
-   * @return string
-   *         The localized number as a string.
-   */
-L10N.numberWithDecimals = function(number, decimals = 0) {
+let strings = {};
+
+function getStr(key) {
+  if (!strings[key]) {
+    throw new Error(`L10N key ${key} cannot be found.`);
+  }
+  return strings[key];
+}
+
+function getFormatStr(name, ...args) {
+  return sprintf(getStr(name), ...args);
+}
+
+function numberWithDecimals(number, decimals = 0) {
   // If this is an integer, don't do anything special.
   if (number === (number|0)) {
     return number;
@@ -35,4 +37,13 @@ L10N.numberWithDecimals = function(number, decimals = 0) {
   });
 }
 
-module.exports = { L10N };
+function setBundle(bundle) {
+  strings = Object.assign(strings, bundle);
+}
+
+module.exports = {
+  getStr,
+  getFormatStr,
+  numberWithDecimals,
+  setBundle,
+};

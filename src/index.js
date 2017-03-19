@@ -17,7 +17,8 @@ require("./shared/components/splitter/SplitBox.css");
 require("./shared/components/tabs/tabbar.css");
 require("./shared/components/tabs/tabs.css");
 // require("./shared/components/tree/tree-view.css");
-require("./netmonitor.css");
+require("./styles/common.css");
+require("./styles/netmonitor.css");
 
 EventEmitter.decorate(window);
 
@@ -31,14 +32,16 @@ async function run() {
     return;
   }
 
-  switch(connection.tab.clientType) {
+  let { clientType } = connection.tab;
+
+  switch(clientType) {
     case "chrome":
       // TODO: support chrome
     case "firefox":
       window.controller = new Controller(connection.client.getTabTarget(), actions, store);
       break;
     default:
-      throw Error(`Unknown connection client - "${connection.tab.clientType}"`);
+      throw Error(`Unknown connection client - "${clientType}"`);
   }
 }
 

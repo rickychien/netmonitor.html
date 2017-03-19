@@ -213,7 +213,8 @@ RequestListContextMenu.prototype = {
       selected.requestHeaders,
       selected.requestHeadersFromUploadStream,
       selected.requestPostData,
-      window.gNetwork.getString.bind(window.gNetwork));
+      window.controller.getString
+    );
 
     let params = [];
     formDataSections.forEach(section => {

@@ -191,7 +191,7 @@ const HeadersPanel = createClass({
           statusCodeDocURL ? MDNLink({
             url: statusCodeDocURL,
           }) : null,
-          window.NetMonitorController.supportsCustomRequest && button({
+          window.controller.supportsCustomRequest && button({
             className: "devtools-button",
             onClick: cloneSelectedRequest,
           }, EDIT_AND_RESEND),

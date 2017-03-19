@@ -41,21 +41,13 @@ module.exports = class Controller {
     this.webConsoleClient.on("networkEvent", this.onNetworkEvent);
     this.webConsoleClient.on("networkEventUpdate", this.onNetworkEventUpdate);
 
-    // let connectTimeline = () => {
-    //   // Don't start up waiting for timeline markers if the server isn't
-    //   // recent enough to emit the markers we're interested in.
-    //   // FIXME:
-    //   if (this.tabTarget.getTrait("documentLoadingMarkers")) {
-    //     this.timelineFront = new TimelineFront(this.tabTarget.client,
-    //       this.tabTarget.form);
-    //     return this.timelineFront.start({ withDocLoadingEvents: true });
-    //   }
-    //   return undefined;
-    // };
-    // await connectTimeline();
-
-    if (this.timelineFront) {
+    // Don't start up waiting for timeline markers if the server isn't
+    // recent enough to emit the markers we're interested in.
+    if (this.tabTarget.getTrait("documentLoadingMarkers")) {
+      this.timelineFront =
+        new TimelineFront(this.tabTarget.client, this.tabTarget.form);
       this.timelineFront.on("doc-loading", this.onDocLoadingMarker);
+      this.timelineFront.start({ withDocLoadingEvents: true });
     }
 
     this.displayCachedEvents();
@@ -74,19 +66,15 @@ module.exports = class Controller {
   close() {
     this.actions.batchReset();
 
-    // The timeline front wasn't initialized and started if the server wasn't
-    // recent enough to emit the markers we were interested in.
-    // FIXME:
-    // if (this.tabTarget.getTrait("documentLoadingMarkers")) {
-    //   await this.timelineFront.destroy();
-    //   this.timelineFront = null;
-    // }
-
     this.webConsoleClient.off("networkEvent", this.onNetworkEvent);
     this.webConsoleClient.off("networkEventUpdate", this.onNetworkEventUpdate);
 
-    if (this.timelineFront) {
+    // The timeline front wasn't initialized and started if the server wasn't
+    // recent enough to emit the markers we were interested in.
+    if (this.tabTarget.getTrait("documentLoadingMarkers")) {
       this.timelineFront.off("doc-loading", this.onDocLoadingMarker);
+      this.timelineFront.destroy();
+      this.timelineFront = null;
     }
 
     // When debugging local or a remote instance, the connection is closed by
@@ -505,12 +493,6 @@ module.exports = class Controller {
    *         are available, or rejected if something goes wrong.
    */
   getString(stringGrip) {
-    // FIXME: this.webConsoleClient will be undefined in mochitest,
-    // so we return string instantly to skip undefined error
-    if (typeof stringGrip === "string") {
-      return Promise.resolve(stringGrip);
-    }
-
     return this.webConsoleClient.getString(stringGrip);
   }
 

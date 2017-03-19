@@ -63,7 +63,7 @@ const MonitorPanel = createClass({
         requestHeaders,
         requestHeadersFromUploadStream,
         requestPostData,
-        window.gNetwork.getString.bind(window.gNetwork),
+        window.controller.getString,
       ).then((newFormDataSections) => {
         updateRequest(
           request.id,
@@ -100,13 +100,14 @@ const MonitorPanel = createClass({
         Toolbar(),
         SplitBox({
           className: "devtools-responsive-container",
-          initialWidth: `${Prefs.networkDetailsWidth}px`,
-          initialHeight: `${Prefs.networkDetailsHeight}px`,
+          initialWidth: Prefs.networkDetailsWidth,
+          initialHeight: Prefs.networkDetailsHeight,
           minSize: "50px",
           maxSize: "80%",
-          splitterSize: "1px",
+          splitterSize: 1,
           startPanel: RequestList({ isEmpty }),
-          endPanel: networkDetailsOpen && NetworkDetailsPanel({ ref: "endPanel" }),
+          endPanel: NetworkDetailsPanel({ ref: "endPanel" }),
+          endPanelCollapsed: !networkDetailsOpen,
           endPanelControl: true,
           vert: this.state.isVerticalSpliter,
         }),

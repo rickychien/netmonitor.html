@@ -31,7 +31,7 @@ function openNetworkDetails(open) {
  */
 function openStatistics(open) {
   if (open) {
-    window.NetMonitorController.triggerActivity(ACTIVITY_TYPE.RELOAD.WITH_CACHE_ENABLED);
+    window.controller.triggerActivity(ACTIVITY_TYPE.RELOAD.WITH_CACHE_ENABLED);
   }
   return {
     type: OPEN_STATISTICS,

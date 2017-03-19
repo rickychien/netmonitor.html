@@ -40,8 +40,8 @@
   --timing-wait-color: rgba(94, 136, 176, 0.8); /* blue grey */
   --timing-receive-color: rgba(112, 191, 83, 0.8); /* green */
 
-  --sort-ascending-image: url(../assets/images/sort-arrows.svg#ascending);
-  --sort-descending-image: url(../assets/images/sort-arrows.svg#descending);
+  --sort-ascending-image: url(../../assets/images/sort-arrows.svg#ascending);
+  --sort-descending-image: url(../../assets/images/sort-arrows.svg#descending);
 }
 
 :root.theme-light {
@@ -55,8 +55,8 @@
   --timing-wait-color: rgba(95, 136, 176, 0.8); /* blue grey */
   --timing-receive-color: rgba(44, 187, 15, 0.8); /* green */
 
-  --sort-ascending-image: url(../assets/images/sort-arrows.svg#ascending);
-  --sort-descending-image: url(../assets/images/sort-arrows.svg#descending);
+  --sort-ascending-image: url(../../assets/images/sort-arrows.svg#ascending);
+  --sort-descending-image: url(../../assets/images/sort-arrows.svg#descending);
 }
 
 :root.theme-firebug {
@@ -70,8 +70,8 @@
   --timing-wait-color: rgba(94, 136, 176, 0.8); /* blue grey */
   --timing-receive-color: rgba(112, 191, 83, 0.8); /* green */
 
-  --sort-ascending-image: url(../assets/images/firebug/arrow-up.svg);
-  --sort-descending-image: url(../assets/images/firebug/arrow-down.svg);
+  --sort-ascending-image: url(../../assets/images/firebug/arrow-up.svg);
+  --sort-descending-image: url(../../assets/images/firebug/arrow-down.svg);
 }
 
 .request-list-container {
@@ -99,7 +99,7 @@
 }
 
 .requests-list-perf-notice-button::before {
-  background-image: url(../assets/images/profiler-stopwatch.svg);
+  background-image: url(../../assets/images/profiler-stopwatch.svg);
 }
 
 .requests-list-reload-notice-button {
@@ -308,23 +308,23 @@
 }
 
 .security-state-insecure {
-  background-image: url(../assets/images/security-state-insecure.svg);
+  background-image: url(../../assets/images/security-state-insecure.svg);
 }
 
 .security-state-secure {
-  background-image: url(../assets/images/security-state-secure.svg);
+  background-image: url(../../assets/images/security-state-secure.svg);
 }
 
 .security-state-weak {
-  background-image: url(../assets/images/security-state-weak.svg);
+  background-image: url(../../assets/images/security-state-weak.svg);
 }
 
 .security-state-broken {
-  background-image: url(../assets/images/security-state-broken.svg);
+  background-image: url(../../assets/images/security-state-broken.svg);
 }
 
 .security-state-local {
-  background-image: url(../assets/images/globe.svg);
+  background-image: url(../../assets/images/globe.svg);
 }
 
 .requests-list-type,
@@ -752,7 +752,7 @@
 
 .security-warning-icon {
   /* FIXME: */
-  /* background-image: url(../assets/images/alerticon-warning.png); */
+  /* background-image: url(../../assets/images/alerticon-warning.png); */
   background-size: 13px 12px;
   margin-inline-start: 5px;
   vertical-align: top;
@@ -763,7 +763,7 @@
 @media (min-resolution: 1.1dppx) {
   .security-warning-icon {
     /* FIXME: */
-    /* background-image: url(../assets/images/alerticon-warning@2x.png); */
+    /* background-image: url(../../assets/images/alerticon-warning@2x.png); */
   }
 }
 
@@ -832,7 +832,7 @@
 }
 
 .requests-list-network-summary-button > .summary-info-icon {
-  background-image: url(../assets/images/profiler-stopwatch.svg);
+  background-image: url(../../assets/images/profiler-stopwatch.svg);
   filter: var(--icon-filter);
   width: 16px;
   height: 16px;

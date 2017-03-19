@@ -5,8 +5,7 @@ const {
   PropTypes,
 } = require("react");
 const { connect } = require("react-redux");
-// FIXME:
-// const { HTMLTooltip } = require("devtools/client/shared/widgets/tooltip/HTMLTooltip");
+const { Tooltip } = require("../shared/components/tooltip/Tooltip");
 const Actions = require("../actions/index");
 const {
   setTooltipImageContent,
@@ -23,9 +22,6 @@ const RequestListContextMenu = require("../request-list-context-menu");
 
 const { div } = DOM;
 
-// tooltip show/hide delay in ms
-const REQUESTS_TOOLTIP_TOGGLE_DELAY = 500;
-
 /**
  * Renders the actual contents of the request list.
  */
@@ -36,7 +32,7 @@ const RequestListContent = createClass({
     dispatch: PropTypes.func.isRequired,
     displayedRequests: PropTypes.object.isRequired,
     firstRequestStartedMillis: PropTypes.number.isRequired,
-    fromCache: PropTypes.bool.isRequired,
+    fromCache: PropTypes.bool,
     onItemMouseDown: PropTypes.func.isRequired,
     onSecurityIconClick: PropTypes.func.isRequired,
     onSelectDelta: PropTypes.func.isRequired,
@@ -50,8 +46,7 @@ const RequestListContent = createClass({
       cloneSelectedRequest: () => dispatch(Actions.cloneSelectedRequest()),
       openStatistics: (open) => dispatch(Actions.openStatistics(open)),
     });
-    // FIXME:
-    // this.tooltip = new HTMLTooltip(window.parent.document, { type: "arrow" });
+    this.tooltip = new Tooltip({ type: "arrow" });
   },
 
   componentDidMount() {
@@ -59,11 +54,10 @@ const RequestListContent = createClass({
     this.setScalingStyles();
 
     // Install event handler for displaying a tooltip
-    // FIXME:
-    // this.tooltip.startTogglingOnHover(this.refs.contentEl, this.onHover, {
-    //   toggleDelay: REQUESTS_TOOLTIP_TOGGLE_DELAY,
-    //   interactive: true
-    // });
+    this.tooltip.startTogglingOnHover(this.refs.contentEl, this.onHover, {
+      toggleDelay: 500,
+      interactive: true
+    });
 
     // Install event handler to hide the tooltip on scroll
     this.refs.contentEl.addEventListener("scroll", this.onScroll, true);
@@ -91,8 +85,7 @@ const RequestListContent = createClass({
     this.refs.contentEl.removeEventListener("scroll", this.onScroll, true);
 
     // Uninstall the tooltip event handler
-    // FIXME:
-    // this.tooltip.stopTogglingOnHover();
+    this.tooltip.stopTogglingOnHover();
   },
 
   /**
@@ -166,8 +159,7 @@ const RequestListContent = createClass({
    * Scroll listener for the requests menu view.
    */
   onScroll() {
-    // FIXME:
-    // this.tooltip.hide();
+    this.tooltip.hide();
   },
 
   /**
