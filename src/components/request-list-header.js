@@ -46,11 +46,13 @@ const RequestListHeader = createClass({
   },
 
   componentDidMount() {
+    // Measure its width and update the 'waterfallWidth' property in the store.
+    // The 'waterfallWidth' will be further updated on every window resize.
+    let { width } = this.refs.header.getBoundingClientRect();
+    this.props.resizeWaterfall(width);
     // Create the object that takes care of drawing the waterfall canvas background
-    this.background = new WaterfallBackground(document);
+    this.background = new WaterfallBackground();
     this.background.draw(this.props);
-    this.resizeWaterfall();
-    window.addEventListener("resize", this.resizeWaterfall);
   },
 
   componentDidUpdate() {
@@ -60,16 +62,6 @@ const RequestListHeader = createClass({
   componentWillUnmount() {
     this.background.destroy();
     this.background = null;
-    window.removeEventListener("resize", this.resizeWaterfall);
-  },
-
-  resizeWaterfall() {
-    // Measure its width and update the 'waterfallWidth' property in the store.
-    // The 'waterfallWidth' will be further updated on every window resize.
-    setTimeout(() => {
-      let { width } = this.refs.header.getBoundingClientRect();
-      this.props.resizeWaterfall(width);
-    }, 50);
   },
 
   render() {

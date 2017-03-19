@@ -469,7 +469,8 @@ const WaterfallColumn = createFactory(createClass({
         div({
           className: "requests-list-timings",
           style: {
-            paddingInlineStart: `${item.startedMillis - firstRequestStartedMillis}px`,
+            // FIXME:
+            // paddingInlineStart: `${item.startedMillis - firstRequestStartedMillis}px`,
           },
         },
           timingBoxes(item),

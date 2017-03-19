@@ -1,10 +1,3 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-"use strict";
-
-const HTML_NS = "http://www.w3.org/1999/xhtml";
 // ms
 const REQUESTS_WATERFALL_BACKGROUND_TICKS_MULTIPLE = 5;
 const REQUESTS_WATERFALL_BACKGROUND_TICKS_SCALES = 3;
@@ -29,7 +22,7 @@ const STATE_KEYS = [
  * Creates the background displayed on each waterfall view in this container.
  */
 function WaterfallBackground() {
-  this.canvas = document.createElementNS(HTML_NS, "canvas");
+  this.canvas = document.createElement("canvas");
   this.ctx = this.canvas.getContext("2d");
   this.prevState = {};
 }
