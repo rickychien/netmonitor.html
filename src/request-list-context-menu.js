@@ -1,5 +1,5 @@
 const { Services } = require("devtools-modules");
-const { getString } = require("./connector");
+const { getString, supportsCustomRequest } = require("./connector");
 const { showMenu } = require("./shared/components/menu");
 const { HarExporter } = require("./har/har-exporter");
 const { Curl } = require("./shared/curl");
@@ -11,28 +11,20 @@ const {
   getUrlQuery,
   parseQueryString,
 } = require("./utils/request-utils");
-const {
-  getSelectedRequest,
-  getSortedRequests,
-} = require("./selectors/index");
 
 function RequestListContextMenu({
   cloneSelectedRequest,
   openStatistics,
+  selectedRequest,
+  sortedRequests,
 }) {
   this.cloneSelectedRequest = cloneSelectedRequest;
   this.openStatistics = openStatistics;
+  this.selectedRequest = selectedRequest;
+  this.sortedRequests = sortedRequests;
 }
 
 RequestListContextMenu.prototype = {
-  get selectedRequest() {
-    return getSelectedRequest(window.gStore.getState());
-  },
-
-  get sortedRequests() {
-    return getSortedRequests(window.gStore.getState());
-  },
-
   /**
    * Handle the context menu opening. Hide items if no request is selected.
    * Since visible attribute only accept boolean value but the method call may
@@ -146,8 +138,7 @@ RequestListContextMenu.prototype = {
       id: "request-list-context-resend",
       label: L10N.getStr("netmonitor.context.editAndResend"),
       accesskey: L10N.getStr("netmonitor.context.editAndResend.accesskey"),
-      visible: !!(window.NetMonitorController.supportsCustomRequest &&
-               selectedRequest && !selectedRequest.isCustom),
+      visible: !!(supportsCustomRequest && selectedRequest && !selectedRequest.isCustom),
       click: this.cloneSelectedRequest,
     });
 
@@ -168,12 +159,11 @@ RequestListContextMenu.prototype = {
       id: "request-list-context-perf",
       label: L10N.getStr("netmonitor.context.perfTools"),
       accesskey: L10N.getStr("netmonitor.context.perfTools.accesskey"),
-      visible: !!window.NetMonitorController.supportsPerfStats,
+      visible: !!selectedRequest,
       click: () => this.openStatistics(true)
     });
 
-    showMenu({ screenX, screenY }, items);
-    return menu;
+    return showMenu({ screenX, screenY }, items);
   },
 
   /**
@@ -188,7 +178,7 @@ RequestListContextMenu.prototype = {
    * Copy the request url from the currently selected item.
    */
   copyUrl() {
-    clipboardHelper.copyString(this.selectedRequest.url);
+    copyToClipboard(this.selectedRequest.url);
   },
 
   /**
@@ -196,10 +186,9 @@ RequestListContextMenu.prototype = {
    * selected item.
    */
   copyUrlParams() {
-    let { url } = this.selectedRequest;
-    let params = getUrlQuery(url).split("&");
-    let string = params.join(Services.appinfo.OS === "WINNT" ? "\r\n" : "\n");
-    clipboardHelper.copyString(string);
+    console.info(this.selectedRequest);
+    let params = getUrlQuery(this.selectedRequest.url).split("&");
+    copyToClipboard(params.join(Services.appinfo.OS === "WINNT" ? "\r\n" : "\n"));
   },
 
   /**
@@ -238,7 +227,7 @@ RequestListContextMenu.prototype = {
       }
     }
 
-    clipboardHelper.copyString(string);
+    copyToClipboard(string);
   },
 
   /**
@@ -268,7 +257,7 @@ RequestListContextMenu.prototype = {
       data.postDataText = await getString(postData);
     }
 
-    clipboardHelper.copyString(Curl.generateCommand(data));
+    copyToClipboard(Curl.generateCommand(data));
   },
 
   /**
@@ -279,7 +268,7 @@ RequestListContextMenu.prototype = {
     if (Services.appinfo.OS !== "WINNT") {
       rawHeaders = rawHeaders.replace(/\r/g, "");
     }
-    clipboardHelper.copyString(rawHeaders);
+    copyToClipboard(rawHeaders);
   },
 
   /**
@@ -290,7 +279,7 @@ RequestListContextMenu.prototype = {
     if (Services.appinfo.OS !== "WINNT") {
       rawHeaders = rawHeaders.replace(/\r/g, "");
     }
-    clipboardHelper.copyString(rawHeaders);
+    copyToClipboard(rawHeaders);
   },
 
   /**
@@ -301,7 +290,7 @@ RequestListContextMenu.prototype = {
 
     getString(text).then(string => {
       let data = formDataURI(mimeType, encoding, string);
-      clipboardHelper.copyString(data);
+      copyToClipboard(data);
     });
   },
 
@@ -312,7 +301,7 @@ RequestListContextMenu.prototype = {
     const { text } = this.selectedRequest.responseContent.content;
 
     getString(text).then(string => {
-      clipboardHelper.copyString(string);
+      copyToClipboard(string);
     });
   },
 

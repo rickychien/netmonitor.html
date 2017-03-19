@@ -13,13 +13,13 @@ function createPopup(doc) {
     e.returnValue = false;
   }
 
-  let mask = document.querySelector("#contextmenu-mask");
+  let mask = doc.querySelector("#contextmenu-mask");
   if (!mask) {
     mask = doc.createElement("div");
     mask.id = "contextmenu-mask";
     mask.oncontextmenu = preventDefault;
-    if (document.body) {
-      document.body.appendChild(mask);
+    if (doc.body) {
+      doc.body.appendChild(mask);
     }
   }
 
@@ -28,7 +28,7 @@ function createPopup(doc) {
   popup.openPopupAtScreen = function(clientX, clientY) {
     this.style.setProperty("left", `${clientX}px`);
     this.style.setProperty("top", `${clientY}px`);
-    mask = document.querySelector("#contextmenu-mask");
+    mask = doc.querySelector("#contextmenu-mask");
     window.onwheel = preventDefault;
     if (mask) {
       mask.classList.add("show");
@@ -39,7 +39,7 @@ function createPopup(doc) {
 
   popup.hidePopup = function() {
     this.remove();
-    mask = document.querySelector("#contextmenu-mask");
+    mask = doc.querySelector("#contextmenu-mask");
     if (mask) {
       mask.classList.remove("show");
     }

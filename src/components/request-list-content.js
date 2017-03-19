@@ -13,6 +13,8 @@ const {
 } = require("../request-list-tooltip");
 const {
   getDisplayedRequests,
+  getSelectedRequest,
+  getSortedRequests,
   getWaterfallScale,
 } = require("../selectors/index");
 
@@ -29,23 +31,19 @@ const RequestListContent = createClass({
   displayName: "RequestListContent",
 
   propTypes: {
-    dispatch: PropTypes.func.isRequired,
     displayedRequests: PropTypes.object.isRequired,
     firstRequestStartedMillis: PropTypes.number.isRequired,
     fromCache: PropTypes.bool,
     onItemMouseDown: PropTypes.func.isRequired,
-    onSecurityIconClick: PropTypes.func.isRequired,
     onSelectDelta: PropTypes.func.isRequired,
     scale: PropTypes.number,
-    selectedRequestId: PropTypes.string,
+    selectedRequest: PropTypes.object,
+    selectDetailsPanelTab: PropTypes.func.isRequired,
+    sortedRequests: PropTypes.object,
   },
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    this.contextMenu = new RequestListContextMenu({
-      cloneSelectedRequest: () => dispatch(Actions.cloneSelectedRequest()),
-      openStatistics: (open) => dispatch(Actions.openStatistics(open)),
-    });
+    this.contextMenu = new RequestListContextMenu(this.props);
     this.tooltip = new Tooltip({ type: "arrow" });
   },
 
@@ -217,9 +215,9 @@ const RequestListContent = createClass({
     const {
       displayedRequests,
       firstRequestStartedMillis,
-      selectedRequestId,
+      selectedRequest = {},
+      selectDetailsPanelTab,
       onItemMouseDown,
-      onSecurityIconClick,
     } = this.props;
 
     return (
@@ -234,12 +232,17 @@ const RequestListContent = createClass({
           fromCache: item.status === "304" || item.fromCache,
           item,
           index,
-          isSelected: item.id === selectedRequestId,
+          isSelected: item.id === selectedRequest.id,
           key: item.id,
           onContextMenu: this.onContextMenu,
           onFocusedNodeChange: this.onFocusedNodeChange,
           onMouseDown: () => onItemMouseDown(item.id),
-          onSecurityIconClick: () => onSecurityIconClick(item.securityState),
+          onSecurityIconClick: () => {
+            let { securityState } = item;
+            if (securityState && securityState !== "insecure") {
+              selectDetailsPanelTab("security");
+            }
+          },
         }))
       )
     );
@@ -250,21 +253,15 @@ module.exports = connect(
   (state) => ({
     displayedRequests: getDisplayedRequests(state),
     firstRequestStartedMillis: state.requests.firstStartedMillis,
-    selectedRequestId: state.requests.selectedId,
+    selectedRequest: getSelectedRequest(state),
+    sortedRequests: getSortedRequests(state),
     scale: getWaterfallScale(state),
   }),
   (dispatch) => ({
-    dispatch,
+    cloneSelectedRequest: () => dispatch(Actions.cloneSelectedRequest()),
+    openStatistics: (open) => dispatch(Actions.openStatistics(open)),
     onItemMouseDown: (id) => dispatch(Actions.selectRequest(id)),
-    /**
-     * A handler that opens the security tab in the details view if secure or
-     * broken security indicator is clicked.
-     */
-    onSecurityIconClick: (securityState) => {
-      if (securityState && securityState !== "insecure") {
-        dispatch(Actions.selectDetailsPanelTab("security"));
-      }
-    },
     onSelectDelta: (delta) => dispatch(Actions.selectDelta(delta)),
+    selectDetailsPanelTab: (tab) => dispatch(Actions.selectDetailsPanelTab(tab)),
   }),
 )(RequestListContent);
