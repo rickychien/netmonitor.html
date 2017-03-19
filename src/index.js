@@ -16,8 +16,7 @@ const NetworkMonitor = require("./components/network-monitor");
 require("./shared/components/splitter/SplitBox.css");
 require("./shared/components/tabs/tabbar.css");
 require("./shared/components/tabs/tabs.css");
-// require("./shared/components/tree/tree-view.css");
-require("./styles/common.css");
+require("./shared/components/tree/tree-view.css");
 require("./styles/netmonitor.css");
 
 EventEmitter.decorate(window);

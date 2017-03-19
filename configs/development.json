@@ -10,12 +10,24 @@
   },
   "features": {
   },
+  "chrome": {
+    "debug": true,
+    "host": "localhost",
+    "port": 9222
+  },
+  "node": {
+    "debug": true,
+    "host": "localhost",
+    "port": 9229
+  },
   "firefox": {
-    "proxyHost": "localhost:9000",
     "webSocketConnection": false,
-    "websocketHost": "localhost:6080"
+    "proxyHost": "localhost:9000",
+    "webSocketHost": "localhost:6080",
+    "mcPath": "./firefox"
   },
   "development": {
-    "serverPort": 8000
+    "serverPort": 8000,
+    "examplesPort": 7999
   }
 }
