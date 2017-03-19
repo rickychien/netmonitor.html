@@ -42,26 +42,13 @@ const StatisticsPanel = createClass({
     };
   },
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
     MediaQueryList.addListener(this.onLayoutChange);
+    this.renderChart();
+  },
 
-    const { requests } = this.props;
-    let ready = requests && !requests.isEmpty() && requests.every((req) =>
-      req.contentSize !== undefined && req.mimeType && req.responseHeaders &&
-      req.status !== undefined && req.totalTime !== undefined
-    );
-
-    this.createChart({
-      id: "primedCacheChart",
-      title: CHARTS_CACHE_ENABLED,
-      data: ready ? this.sanitizeChartDataSource(requests, false) : null,
-    });
-
-    this.createChart({
-      id: "emptyCacheChart",
-      title: CHARTS_CACHE_DISABLED,
-      data: ready ? this.sanitizeChartDataSource(requests, true) : null,
-    });
+  componentDidUpdate() {
+    this.renderChart();
   },
 
   componentWillUnmount() {
@@ -227,6 +214,26 @@ const StatisticsPanel = createClass({
   onLayoutChange() {
     this.setState({
       isVerticalSpliter: MediaQueryList.matches,
+    });
+  },
+
+  renderChart() {
+    const { requests } = this.props;
+    let ready = requests && !requests.isEmpty() && requests.every((req) =>
+      req.contentSize !== undefined && req.mimeType && req.responseHeaders &&
+      req.status !== undefined && req.totalTime !== undefined
+    );
+
+    this.createChart({
+      id: "primedCacheChart",
+      title: CHARTS_CACHE_ENABLED,
+      data: ready ? this.sanitizeChartDataSource(requests, false) : null,
+    });
+
+    this.createChart({
+      id: "emptyCacheChart",
+      title: CHARTS_CACHE_DISABLED,
+      data: ready ? this.sanitizeChartDataSource(requests, true) : null,
     });
   },
 
