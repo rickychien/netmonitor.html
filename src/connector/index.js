@@ -3,7 +3,15 @@ let connector = {};
 module.exports = {
   connect(connection, actions, store) {
     let { clientType } = connection.tab;
-    connector = require(`./${clientType}-connector`);
+    switch (clientType) {
+      case "chrome":
+        break;
+      case "firefox":
+        connector = require("./firefox-connector");
+        break;
+      default:
+        throw `Unknown client type - ${clientType}`;
+    }
     connector.connect(connection, actions, store);
   },
 
