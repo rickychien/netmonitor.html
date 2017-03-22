@@ -1,0 +1,7 @@
+{
+  "theme": "dark",
+  "hotReloading": true,
+  "logging": {
+    "actions": false
+  }
+}

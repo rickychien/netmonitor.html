@@ -3,7 +3,7 @@
   "environment": "development",
   "baseWorkerURL": "http://localhost:8000/public/build/",
   "host": "",
-  "theme": "dark",
+  "theme": "light",
   "logging": {
     "client": false,
     "firefoxProxy": false
