@@ -25,6 +25,11 @@ function buildConfig(envConfig) {
           loader: "file-loader",
         },
       ]
+    },
+
+    // Fallback compatibility for npm link
+    resolve: {
+      fallback: path.join(__dirname, "node_modules"),
     }
   };
 
