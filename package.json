@@ -27,6 +27,7 @@
     "file-loader": "^0.10.1"
   },
   "scripts": {
-    "start": "node bin/dev-server"
+    "start": "node bin/dev-server",
+    "copy-assets": "node bin/copy-assets"
   }
 }

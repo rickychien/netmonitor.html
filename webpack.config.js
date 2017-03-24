@@ -5,13 +5,7 @@ const getConfig = require("./bin/getConfig");
 function buildConfig(envConfig) {
   let webpackConfig = {
     entry: {
-      netmonitor: [path.join(__dirname, "src", "index.js")],
-    },
-
-    output: {
-      path: path.join(__dirname, "assets/build"),
-      filename: "[name].js",
-      publicPath: "/assets/build"
+      netmonitor: [path.join(__dirname, "src", "index.js")]
     },
 
     module: {
@@ -27,10 +21,16 @@ function buildConfig(envConfig) {
       ]
     },
 
+    output: {
+      filename: "[name].js",
+      libraryTarget: "umd",
+    },
+
     // Fallback compatibility for npm link
     resolve: {
       fallback: path.join(__dirname, "node_modules"),
-    }
+      alias: {},
+    },
   };
 
   let config = toolboxConfig(webpackConfig, envConfig);

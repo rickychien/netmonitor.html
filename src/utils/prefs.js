@@ -16,3 +16,11 @@ module.exports = {
     filters: ["Json", "netmonitor.filters"],
   }),
 };
+
+// module.exports = {
+//   Prefs: {
+//     networkDetailsWidth: 450,
+//     networkDetailsHeight: 50,
+//     filters: ["all"],
+//   },
+// };

@@ -1292,10 +1292,12 @@
 
 html,
 body,
-.root,
+#mount,
+.launchpad-root
 .network-monitor,
 .monitor-panel {
   display: flex;
+  flex: initial;
   flex-direction: column;
   width: 100vw;
   height: 100%;

@@ -1,18 +1,31 @@
 let connector = {};
 
 module.exports = {
-  connect(connection, actions, store) {
+  onConnect(connection, actions, store) {
+    if (!connection || !connection.tab) {
+      return;
+    }
+
     let { clientType } = connection.tab;
     switch (clientType) {
       case "chrome":
+        this.onChromeConnect(actions, store);
         break;
       case "firefox":
-        connector = require("./firefox-connector");
+        this.onFirefoxConnect(actions, store);
         break;
       default:
         throw `Unknown client type - ${clientType}`;
     }
-    connector.connect(connection, actions, store);
+  },
+
+  onChromeConnect(actions, store) {
+    // TODO: support chrome debugging protocol
+  },
+
+  onFirefoxConnect(actions, store) {
+    connector = require("./firefox-connector");
+    connector.connect(actions, store);
   },
 
   get supportsCustomRequest() {
