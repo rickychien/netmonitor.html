@@ -4,7 +4,6 @@ function TimelineFront() {
   this.on = this.start = this.off = this.destroy = () => {};
   return this;
 };
-const { firefox } = require("devtools-client-adapters");
 const { Services } = require("devtools-modules");
 const { ACTIVITY_TYPE, EVENTS } = require("../constants");
 const { getRequestById, getDisplayedRequestById } = require("../selectors");
@@ -34,10 +33,10 @@ class FirefoxConnector {
     this.inspectRequest = this.inspectRequest.bind(this);
   }
 
-  connect(actions, store) {
-    this.tabTarget = firefox.getTabTarget();
+  connect(connection, actions, store) {
     this.actions = actions;
     this.store = store;
+    this.tabTarget = connection.client.getTabTarget();
     this.tabClient = this.tabTarget.isTabActor ? this.tabTarget.activeTab : null;
 
     this.tabTarget.on("will-navigate", this.willNavigate);

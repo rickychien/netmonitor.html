@@ -16,6 +16,7 @@ L10N.setBundle(require("./locales/har.properties"));
 L10N.setBundle(require("./locales/netmonitor.properties"));
 L10N.setBundle(require("./locales/webconsole.properties"));
 
+require("./styles/common.css");
 require("./shared/components/splitter/SplitBox.css");
 require("./shared/components/tabs/tabbar.css");
 require("./shared/components/tabs/tabs.css");
@@ -32,8 +33,8 @@ const { onConnect, onFirefoxConnect } = require("./connector");
 if (isFirefoxPanel()) {
   module.exports = {
     bootstrap({ tabTarget, toolbox }) {
-      firefox.setTabTarget(tabTarget);
       renderRoot(React, ReactDOM, App, store);
+      firefox.setTabTarget(tabTarget);
       firefox.initPage(actions);
       return onFirefoxConnect(actions, store);
     },

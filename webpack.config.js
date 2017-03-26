@@ -1,45 +1,58 @@
+const { isDevelopment } = require("devtools-config");
+const { NormalModuleReplacementPlugin } = require("webpack");
 const { toolboxConfig } = require("./node_modules/devtools-launchpad/index");
 const path = require("path");
 const getConfig = require("./bin/getConfig");
 
-function buildConfig(envConfig) {
-  let webpackConfig = {
-    entry: {
-      netmonitor: [path.join(__dirname, "src", "index.js")]
+let webpackConfig = {
+  entry: {
+    netmonitor: [path.join(__dirname, "src", "index.js")]
+  },
+
+  module: {
+    loaders: [
+      {
+        test: /\.(png|svg)$/,
+        loader: "file-loader?name=[name].[ext]",
+      },
+    ]
+  },
+
+  output: {
+    path: path.join(__dirname, "assets/build"),
+    filename: "[name].js",
+    publicPath: "/assets/build",
+    libraryTarget: "umd",
+  },
+
+  // Fallback compatibility for npm link
+  resolve: {
+    fallback: path.join(__dirname, "node_modules"),
+    alias: {
+      'react': path.join(__dirname, 'node_modules/react'),
     },
+  }
+};
 
-    module: {
-      loaders: [
-        {
-          test: /\.properties$/,
-          loader: require.resolve('./loaders/l10n-properties-loader'),
-        },
-        {
-          test: /\.(png|svg)$/,
-          loader: "file-loader",
-        },
-      ]
-    },
+if (!isDevelopment()) {
+  webpackConfig.output.libraryTarget = "umd";
+  webpackConfig.plugins = [];
 
-    output: {
-      filename: "[name].js",
-      libraryTarget: "umd",
-    },
+  const mappings = [
+    [/\.\/mocha/, "./mochitest"],
+    [/\.\.\/utils\/mocha/, "../utils/mochitest"],
+    [/\.\/utils\/mocha/, "./utils/mochitest"],
+  ];
 
-    // Fallback compatibility for npm link
-    resolve: {
-      fallback: path.join(__dirname, "node_modules"),
-      alias: {},
-    },
-  };
-
-  let config = toolboxConfig(webpackConfig, envConfig);
-
-  // Remove loaders from devtools-launchpad webpack config
-  config.module.loaders = config.module.loaders
-    .filter((loader) => !["svg-inline"].includes(loader.loader));
-
-  return config;
+  mappings.forEach(([regex, res]) => {
+    webpackConfig.plugins.push(new NormalModuleReplacementPlugin(regex, res));
+  });
 }
 
-module.exports = buildConfig(getConfig());
+let config = toolboxConfig(webpackConfig, getConfig());
+
+// Remove loaders from devtools-launchpad webpack config
+config.module.loaders = config.module.loaders
+  .filter((loader) => !["svg-inline"].includes(loader.loader));
+
+module.exports = config;
